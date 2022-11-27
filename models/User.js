@@ -17,8 +17,9 @@ const userSchema = new Schema(
 					let regex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
 					regex.test(String(email).toLocaleLowerCase().trim());
 				},
-				message: (email) => `${email.value} Please enter a valid email`,
+				message: (email) => `${email.value} Please enter a valid email address`,
 			},
+            //match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Please enter a valid email address'],
 		},
 		thoughts: [
 			{
