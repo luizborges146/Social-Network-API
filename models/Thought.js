@@ -1,12 +1,37 @@
 const { Schema, Types } = require('mongoose');
 
+
+//This will not be a model, but rather will be used as the reaction field's subdocument schema in the Thought model.
+const reactionSchema = new Schema(
+	{
+		reactionBody: {
+			type: String,
+			required: true,
+			max: 280
+		},
+		userName: {
+			type: String,
+			required: true,
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
+		},
+	},
+	{
+		toJSON: {
+			virtuals: true,
+		},
+	}
+);
+
 const thoughtSchema = new Schema(
     {
       thoughtText: {
         type: String,
         required: true,
-        minlength: 1,
-        maxlength: 280,
+        minLength: 1,
+        maxLength: 280,
       },
       userName: {
         type: String,
@@ -22,6 +47,8 @@ const thoughtSchema = new Schema(
       toJSON: {
         virtuals: true,
       },
+       // prevents virtuals from creating duplicate of _id as `id`
+       id: false
     }
   );
   
