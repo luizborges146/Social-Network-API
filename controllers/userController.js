@@ -26,7 +26,7 @@ module.exports = {
 	},
     
 	// Get specific user by id
-	getSingleUser(req, res) {
+	getOneUser(req, res) {
 		User.findOne({ _id: req.params.userId })
 			.select('-__v')
 			.then(async (user) =>
