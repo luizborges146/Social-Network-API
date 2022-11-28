@@ -19,7 +19,7 @@ const userFriend = async (userId) =>
 
 module.exports = {
 	// get all users
-	getUsers(req, res) {
+	getAllUsers(req, res) {
 		User.find()
 			.then((users) => res.json(users))
 			.catch((err) => res.status(500).json(err));
@@ -71,6 +71,7 @@ module.exports = {
 		  res.status(500).json(err);
 		});
 	},
+
 	//  Update a user by its id
 	updateUser(req, res) {
         User.findOneAndUpdate(
@@ -105,6 +106,7 @@ module.exports = {
 			)
 			.catch((err) => res.status(500).json(err));
 	},
+
 	//  Remove a friend from a user's friend list
 	deleteFriend(req, res){
 		User.findOneAndUpdate(
