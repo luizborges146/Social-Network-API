@@ -10,7 +10,7 @@ module.exports = {
     },
 
     // Get one thought by id
-    getSingleThought({ params }, res) {
+    getSingleThought(req, res) {
         Thought.findOne({ _id: req.params.thoughtId })
 		.select('-__v')
 		.then((thought) =>
@@ -23,7 +23,7 @@ module.exports = {
 
 
     //Create a new thought
-    createThought({ body }, res) {
+    createThought(req, res) {
         Thought.create(req.body)
 		.then((thought) => {
 			 User.findOneAndUpdate(
@@ -80,9 +80,7 @@ module.exports = {
 		  )
 			.then((thought) =>
 			  !thought
-				? res
-					.status(404)
-					.json({ message: 'No thought found' })
+				? res.status(404).json({ message: 'No thought found' })
 				: res.json(thought)
 			)
 			.catch((err) => res.status(500).json(err));
@@ -97,9 +95,7 @@ module.exports = {
 		  )
 		  .then((thought) =>
 		  !thought
-			? res
-				.status(404)
-				.json({ message: 'No thought found' })
+			? res.status(404).json({ message: 'No thought found' })
 			: res.json(thought)
 		)
 		.catch((err) => res.status(500).json(err));

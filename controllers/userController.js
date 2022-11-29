@@ -1,22 +1,6 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-
-// Aggregate function to get user by id
-const userFriend = async (userId) =>
-  User.aggregate([
-    { $match: { _id: ObjectId(userId) } },
-    {
-      $unwind: '$friends',
-    },
-    {
-      $group: {
-        _id: ObjectId(userId),
-        userName: $userName
-      },
-    },
-  ]);
-
 module.exports = {
 	// get all users
 	getAllUsers(req, res) {
@@ -32,10 +16,7 @@ module.exports = {
 			.then(async (user) =>
 				!user
 					? res.status(404).json({ message: 'No user with that ID' })
-					: res.json({
-						user,
-						friends: await userFriend(req.params.userId)
-					})
+					: res.json(user)
 			)
 			.catch((err) => res.status(500).json(err));
 	},
@@ -47,9 +28,9 @@ module.exports = {
 			.catch((err) => res.status(500).json(err));
 	},
 
-	// Delete user by id
+	// Delete user by id -- needs to check this one #################################################### ##########################################################################################################################################
 	deleteUser(req, res) {
-		User.findOneAndRemove({ _id: req.params.userId })
+		User.findByIdAndDelete({ _id: req.params.userId })
 		.then((user) =>
 		  !user
 			? res.status(404).json({ message: 'User not found' })
@@ -75,8 +56,8 @@ module.exports = {
 	//  Update a user by its id
 	updateUser(req, res) {
         User.findOneAndUpdate(
-            { _id: params.userId },
-            { $set: body },
+            { _id: req.params.userId },
+            { $set: req.body },
             { new: true, runValidators: true }
         )
         .then(user => {
@@ -91,20 +72,23 @@ module.exports = {
     },
 
 	// Add a new friend to a user's friend list
-	addFriend(req, res) {
+	addFriend({ params }, res) {
 		User.findOneAndUpdate(
-			{ _id: req.params.userId },
-			{ $addToSet: { friends: req.body } },
-			{ runValidators: true, new: true }
+			{ _id: params.userId },
+			{ $push: { friends: params.friendId } },
+			{ new: true }
 		  )
-			.then((user) =>
-			  !user
-				? res
-					.status(404)
-					.json({ message: 'No user found :(' })
-				: res.json(user)
-			)
-			.catch((err) => res.status(500).json(err));
+			.then((user) => {
+				if (!dbUserData) {
+                    res.status(404).json({ message: 'No user found at this id!' });
+                    return;
+                }
+                res.json(dbUserData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            });
 	},
 
 	//  Remove a friend from a user's friend list
