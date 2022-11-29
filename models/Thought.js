@@ -13,14 +13,14 @@ const reactionSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		// createdAt: {
-		// 	type: Date,
-		// 	default: Date.now,
-		// },
+		createdAt: {
+			type: Date,
+			default: Date.now(),
+		},
 	},
 	{
 		toJSON: {
-			virtuals: true,
+			getters: true,
 		},
     // prevents virtuals from creating duplicate of _id as `id`
     id: false
@@ -42,7 +42,7 @@ const thoughtSchema = new Schema(
       reactions: [reactionSchema],
       createdAt: {
         type: Date,
-        default: Date.now,
+        default: Date.now(),
       },
     },
     {

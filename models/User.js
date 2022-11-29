@@ -1,4 +1,4 @@
-const { Schema, Types } = require('mongoose');
+const { Schema, Types, model } = require('mongoose');
 
 const userSchema = new Schema(
 	{
@@ -13,13 +13,12 @@ const userSchema = new Schema(
 			required: true,
 			unique: true,
 			validate: { // check if the email will have number from 0-9 or letters A-Z followed by @ followed by the domain with dot + the 3 to 7 character for the end of the email, like .com
-				emailCheck: function (email) {
+				validator: function (email) {
 					let regex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
 					regex.test(String(email).toLocaleLowerCase().trim());
 				},
 				message: (email) => `${email.value} Please enter a valid email address`,
 			},
-            //match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Please enter a valid email address'],
 		},
 		thoughts: [
 			{
